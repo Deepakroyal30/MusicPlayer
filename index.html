@@ -3,19 +3,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Toast Notifications</title>
+    <title>Image Gallery</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-    <main>
-        <div class="container">
-            <button onclick="show('success')">Success</button>
-            <button onclick="show('error')">Error</button>
-            <button onclick="show('oops')">Invalid</button>
+    <div class="gallerywrapper">
+        <img src="images/back.png" alt="back" id="back">
+        <div class="gallery"> 
+            <div class="gallery-row">
+                <img src="/images/image-1.png" alt="s">
+                <img src="/images/image-2.png" alt="s">
+                <img src="/images/image-3.png" alt="s">
+            </div>
+            <div class="gallery-row">
+                <img src="/images/image-4.png" alt="s">
+                <img src="/images/image-5.png" alt="s">
+                <img src="/images/image-6.png" alt="s">
+            </div>
+            <div class="gallery-row">
+                <img src="/images/image-7.jpg" alt="s">
+                <img src="/images/image-8.jpg" alt="s">
+                <img src="/images/image-900.jpg" alt="s">
+            </div>
+            <div class="gallery-row">
+                <img src="/images/image-10.jpg" alt="s">
+                <img src="/images/image-11.jpg" alt="s">
+                <img src="/images/image-120.jpg" alt="s">
+            </div>
+            <div class="gallery-row">
+                <img src="/images/image-13.jpg" alt="s">
+                <img src="/images/image-14.jpg" alt="s">
+                <img src="/images/image-15.jpg" alt="s">
+            </div>
         </div>
-        <div id="box"></div>
-    </main>
+        <img src="images/next.png" alt="next" id="next">
+    </div>
     <script src="script.js"></script>
 </body>
 </html>
+<style>
+   * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #191919b1;
+}
+
+.gallerywrapper {
+    width: 75%;
+    margin: 10% auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#back, #next {
+    width: 100px;
+    height: 100px;
+    cursor: pointer;
+}
+
+.gallery {
+    width: 900px;
+    display: flex;
+    overflow-x: hidden; /* Prevent partial scrolling */
+    margin: 0 auto;
+    scroll-behavior: smooth;
+}
+
+.gallery-row {
+    min-width: 900px; /* Ensure each row takes the full width */
+    display: flex;
+    justify-content: space-between;
+}
+
+.gallery img {
+    width: 290px;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 5px;
+    box-shadow: 0px 0px 20px rgba(89, 89, 89, 0.3);
+}
+
+.gallery img:hover {
+    transition: 0.6s ease-in-out;
+    transform: scale(1.1);
+}
+
+.gallery::-webkit-scrollbar {
+    display: none;
+}
+
+
+</style>
+
+<script>
+  document.querySelector('.gallery').addEventListener('wheel', function(event) {
+    event.preventDefault();
+    const scrollAmount = 100; // Adjust this value for smoother scroll
+    const gallery = this;
+    if (event.deltaY < 0) {
+        gallery.scrollLeft -= scrollAmount;
+    } else {
+        gallery.scrollLeft += scrollAmount;
+    }
+});
+
+document.getElementById('back').addEventListener('click', function() {
+    const gallery = document.querySelector('.gallery');
+    const itemWidth = gallery.querySelector('.gallery-row').offsetWidth;
+    smoothScroll(gallery, -itemWidth);
+});
+
+document.getElementById('next').addEventListener('click', function() {
+    const gallery = document.querySelector('.gallery');
+    const itemWidth = gallery.querySelector('.gallery-row').offsetWidth;
+    smoothScroll(gallery, itemWidth);
+});
+
+function smoothScroll(element, distance) {
+    const duration = 500; // Duration of the animation in milliseconds
+    const start = element.scrollLeft;
+    const end = start + distance;
+    const change = end - start;
+    const increment = 20;
+    let currentTime = 0;
+
+    function animateScroll() {
+        currentTime += increment;
+        const val = easeInOutQuad(currentTime, start, change, duration);
+        element.scrollLeft = val;
+        if (currentTime < duration) {
+            requestAnimationFrame(animateScroll);
+        }
+    }
+    animateScroll();
+}
+
+function easeInOutQuad(t, b, c, d) {
+    t /= d / 2;
+    if (t < 1) return c / 2 * t * t + b;
+    t--;
+    return -c / 2 * (t * (t - 2) - 1) + b;
+}
+
+</script>
